@@ -1,0 +1,120 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main()
+{
+//beolvasás
+
+    long int procszam, gepszam;
+    int iksz = 0;
+
+    printf("Add meg a processzek szamat: ");
+    scanf("%d", &procszam);
+    printf("Add meg a gepek szamat: ");
+    scanf("%d", &gepszam);
+
+    if (gepszam <=10 && procszam <= 10)
+    {
+        iksz = 1;
+    }
+
+    int prochz[gepszam][procszam];
+    int klon[gepszam][procszam];
+
+    printf("\n__________________________________________\n\n");
+
+//számok randomizálása és tárolása
+
+    int i = 0, j = 0;
+    srand (time(NULL));
+
+    for(j = 0; j < gepszam; j++)
+    {
+        printf("gep%d:  ", j + 1);
+        for(i = 0; i < procszam; i++)
+        {
+            prochz[j][i] = rand() % 8 + 1;
+            klon[j][i] = prochz[j][i];
+            printf("%d ", prochz[j][i]);
+        }
+        printf("\n");
+    }
+
+    printf("\n__________________________________________\n\n");
+    i = 0, j = 0;
+
+
+//rajzolás, új értékek tárolása
+
+    int n = 0, elozo = 0, u = 0, p = 0, k, q;
+
+    for(k = 0; k < gepszam; k++)
+    {
+        if (k > 0)
+        {
+            elozo = elozo + klon[k - 1][0];
+        }
+        for(n = 0; n < elozo; n++)
+        {
+            if (iksz == 1)
+                printf(" ");
+        }
+
+        for(i = 0; i < procszam; i++)
+        {
+            if (iksz == 1)
+                printf("|");
+            j = 1;
+            while (klon[k][i] > j)
+            {
+                if (iksz == 1)
+                    printf("-");
+                j++;
+            }
+            if (k > 0 && i != procszam - 1 && klon[k - 1][i + 1] + u >= klon[k][i] + p)
+            {
+                q = (klon[k - 1][i + 1] + u ) - (klon[k][i] + p);
+                klon[k][i] = q + klon[k][i];
+                while (q > 0)
+                {
+                    if (iksz == 1)
+                        printf(" ");
+                    q--;
+                }
+                u = 0;
+                p = 0;
+                q = 0;
+            }
+            else if (k > 0 && klon[k - 1][i + 1] + u < klon[k][i] + p)
+            {
+                u = u + klon[k - 1][i + 1];
+                p = p + klon[k][i];
+            }
+        }
+        if (iksz == 1)
+            printf("\n");
+        q = 0;
+        p = 0;
+        u = 0;
+    }
+
+
+//a Cmax kiszámítása, kiírása
+
+    int cmax = 0;
+
+    for (i = 0; i < gepszam; i++)
+    {
+        cmax = cmax + klon[i][0];
+    }
+    for (i = 1; i < procszam; i++)
+    {
+        cmax = cmax + klon[gepszam - 1][i];
+    }
+
+    printf("\n\nCmax: %d\n\n\n", cmax);
+
+
+    return 0;
+}
